@@ -12,3 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Aquí puedes empezar a añadir tus funciones personalizadas 
+
+// Eliminar la pestaña "Visits" del panel de YITH WooCommerce Affiliates Premium
+add_filter('yith_wcaf_affiliates_settings', function($options) {
+    if (isset($options['affiliates']['affiliates_options']['sub-tabs']['affiliates-clicks'])) {
+        unset($options['affiliates']['affiliates_options']['sub-tabs']['affiliates-clicks']);
+    }
+    return $options;
+}, 20); 
