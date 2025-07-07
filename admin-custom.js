@@ -42,4 +42,117 @@
     observer.observe(document.body, { childList: true, subtree: true });
 })();
 
+// Cambiar el título h3 de la sección de transferencia bancaria en Settings según idioma
+(function() {
+    function cambiarTituloTransferencia() {
+        var h3 = document.querySelector('.additional-info .settings-box h3');
+        if (
+            h3 &&
+            (
+                h3.textContent.trim() === 'Transferencia de banco/cable directo' ||
+                h3.textContent.trim() === 'Transferencia directa' ||
+                h3.textContent.trim() === 'Direct bank/wire transfer'
+            )
+        ) {
+            // Detectar idioma del documento
+            var lang = document.documentElement.lang || 'en';
+            if (lang.startsWith('es')) {
+                h3.textContent = 'Transferencia bancaria directa';
+            } else {
+                h3.textContent = 'Direct bank transfer';
+            }
+        }
+    }
 
+    document.addEventListener('DOMContentLoaded', cambiarTituloTransferencia);
+
+    // Por si el contenido se carga dinámicamente
+    var observer = new MutationObserver(function() {
+        cambiarTituloTransferencia();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+// Cambiar la etiqueta "Nombre de la cuenta" por "Beneficiario"/"Beneficiary" en singular según idioma
+(function() {
+    function cambiarLabelCuenta() {
+        document.querySelectorAll('.additional-info .settings-box label').forEach(function(label) {
+            var txt = label.textContent.trim().toLowerCase();
+            var lang = document.documentElement.lang || 'en';
+            if (lang.startsWith('es')) {
+                if (txt.includes('cuenta')) {
+                    label.textContent = 'Beneficiario'; 
+                }
+            } else {
+                if (txt.includes('account')) {
+                    label.textContent = 'Beneficiary'; 
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', cambiarLabelCuenta);
+
+    var observer = new MutationObserver(function() {
+        cambiarLabelCuenta();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+// Cambiar la etiqueta IBAN por "BSB (solo Australia)" o "BSB (Australia only)" según idioma, sin afectar el span opcional
+(function() {
+    function cambiarLabelIBAN() {
+        document.querySelectorAll('#gateway_bacs_bacs_iban_field label').forEach(function(label) {
+            // Busca el primer nodo de texto dentro del label
+            for (var i = 0; i < label.childNodes.length; i++) {
+                var node = label.childNodes[i];
+                if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().toUpperCase() === 'IBAN') {
+                    var lang = document.documentElement.lang || 'en';
+                    if (lang.startsWith('es')) {
+                        node.textContent = 'BSB (solo Australia) ';
+                    } else {
+                        node.textContent = 'BSB (Australia only) ';
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', cambiarLabelIBAN);
+
+    var observer = new MutationObserver(function() {
+        cambiarLabelIBAN();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
+
+// Cambiar la etiqueta "Código Swift"/"Swift code" por "Número de cuenta (NZ y AUS)" o "Account number (NZ & AUS)" según idioma
+(function() {
+    function cambiarLabelSwift() {
+        document.querySelectorAll('#gateway_bacs_bacs_swift_field label').forEach(function(label) {
+            // Busca el primer nodo de texto dentro del label
+            for (var i = 0; i < label.childNodes.length; i++) {
+                var node = label.childNodes[i];
+                var txt = node.textContent.trim().toLowerCase();
+                var lang = document.documentElement.lang || 'en';
+                if (
+                    node.nodeType === Node.TEXT_NODE &&
+                    (txt === 'código swift' || txt === 'swift code')
+                ) {
+                    if (lang.startsWith('es')) {
+                        node.textContent = 'Número de cuenta (NZ y AUS) ';
+                    } else {
+                        node.textContent = 'Account number (NZ & AUS) ';
+                    }
+                }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', cambiarLabelSwift);
+
+    var observer = new MutationObserver(function() {
+        cambiarLabelSwift();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
