@@ -1,4 +1,26 @@
-// Personalización: Ocultar bloque "Total visits" en el dashboard de YITH Affiliates
+// Ocultar pestañas "Commissions" y "Visits" en el panel de afiliados (solo frontend)
+(function() {
+    function ocultarPestanas() {
+        // Oculta la pestaña de Commissions
+        var commissionsTab = document.querySelector('.yith-wcaf-dashboard-navigation-item.commissions');
+        if (commissionsTab) {
+            commissionsTab.style.display = 'none';
+        }
+        // Oculta la pestaña de Visits (clicks)
+        var visitsTab = document.querySelector('.yith-wcaf-dashboard-navigation-item.clicks');
+        if (visitsTab) {
+            visitsTab.style.display = 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', ocultarPestanas);
+
+    // Por si el contenido se carga dinámicamente
+    var observer = new MutationObserver(function() {
+        ocultarPestanas();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+})();
 
 (function() {
     function cambiarTitulo() {
@@ -19,3 +41,5 @@
     });
     observer.observe(document.body, { childList: true, subtree: true });
 })();
+
+
