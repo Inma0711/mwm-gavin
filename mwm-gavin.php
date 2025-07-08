@@ -14,8 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 add_action('wp_enqueue_scripts', function() {
     wp_enqueue_script(
-        'mwm-gavin-admin-custom',
-        plugin_dir_url(__FILE__) . 'admin-custom.js',
+        'mwm-gavin-dashboard-custom',
+        plugin_dir_url(__FILE__) . 'dashboard-custom.js',
         array(),
         '1.0',
         true

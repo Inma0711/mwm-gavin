@@ -66,26 +66,49 @@
             }
         }
 
-        // Cambiar texto del enlace de navegación "Settings" a "My affiliates"
-        var settingsNav = document.querySelector('.yith-wcaf-dashboard-navigation-item.settings a');
-        if (settingsNav) {
-            var txt = settingsNav.textContent.trim().toLowerCase();
-            if (txt === 'settings') {
-                settingsNav.textContent = 'My affiliates';
+        // Cambiar texto del enlace de navegación "Link generator" a "My affiliates"
+        var linkGeneratorNav = document.querySelector('.yith-wcaf-dashboard-navigation-item.generate-link a');
+        if (linkGeneratorNav) {
+            var txt = linkGeneratorNav.textContent.trim().toLowerCase();
+            if (txt === 'link generator') {
+                linkGeneratorNav.textContent = 'My affiliates';
             }
         }
     }
 
-    // Ejecutar al cargar
-    document.addEventListener('DOMContentLoaded', function() {
-        ocultarPestanas();
-        cambiarTextos();
-    });
+function limpiarPanelAfiliado() {
+    var mainContainer = document.querySelector('.yith-wcaf.yith-wcaf-link-generator.woocommerce');
+    if (mainContainer) {
+        var affiliateInfo = mainContainer.querySelector('.affiliate-info');
+        if (affiliateInfo) {
+            var h4 = affiliateInfo.querySelector('h4');
+            if (h4) {
+                // Solo deja el h4 (con el ID de afiliado)
+                var nuevoDiv = document.createElement('div');
+                nuevoDiv.className = 'affiliate-info';
+                nuevoDiv.appendChild(h4.cloneNode(true));
+                // Si tienes un título, lo mantenemos
+                var dashboardTitle = mainContainer.querySelector('.dashboard-title');
+                mainContainer.innerHTML = '';
+                if (dashboardTitle) mainContainer.appendChild(dashboardTitle.cloneNode(true));
+                mainContainer.appendChild(nuevoDiv);
+            }
+        }
+    }
+}
 
-    // Observer único para todo
-    var observer = new MutationObserver(function() {
-        ocultarPestanas();
-        cambiarTextos();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+document.addEventListener('DOMContentLoaded', function() {
+    ocultarPestanas();
+    cambiarTextos();
+    limpiarPanelAfiliado();
+});
+
+var observer = new MutationObserver(function() {
+    observer.disconnect(); // Detén el observer antes de modificar el DOM
+    ocultarPestanas();
+    cambiarTextos();
+    limpiarPanelAfiliado();
+    observer.observe(document.body, { childList: true, subtree: true }); // Reactívalo después
+});
+observer.observe(document.body, { childList: true, subtree: true });
 })();
