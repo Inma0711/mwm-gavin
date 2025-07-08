@@ -65,6 +65,15 @@
                 dashboardTitle.textContent = 'My affiliates';
             }
         }
+
+        // Cambiar texto del enlace de navegación "Settings" a "My affiliates"
+        var settingsNav = document.querySelector('.yith-wcaf-dashboard-navigation-item.settings a');
+        if (settingsNav) {
+            var txt = settingsNav.textContent.trim().toLowerCase();
+            if (txt === 'settings') {
+                settingsNav.textContent = 'My affiliates';
+            }
+        }
     }
 
     // Ejecutar al cargar
