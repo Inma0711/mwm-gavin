@@ -1,4 +1,5 @@
 // Ocultar pestañas "Commissions" y "Visits" en el panel de afiliados (solo frontend)
+console.log('JS de subafiliados cargado');
 (function() {
     // Utilidad para obtener idioma
     function getLang() {
@@ -194,9 +195,9 @@
                         nameCell.style.cssText = 'padding: 12px; color: #333;';
                         row.appendChild(nameCell);
                         
-                        // Celda del ID de afiliado
+                        // Celda del TOKEN de afiliado (en vez de ID interno)
                         var idCell = document.createElement('td');
-                        idCell.textContent = subaffiliate.affiliate_id;
+                        idCell.textContent = subaffiliate.token || 'N/A';
                         idCell.style.cssText = 'padding: 12px; color: #333; font-weight: 500;';
                         row.appendChild(idCell);
                         
@@ -229,6 +230,9 @@
             }
         });
     }
+
+    // Forzar la petición AJAX al cargar el JS
+    cargarSubafiliados();
 
     document.addEventListener('DOMContentLoaded', function() {
         ocultarPestanas();

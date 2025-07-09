@@ -33,28 +33,9 @@ add_action('wp_ajax_get_subaffiliates', 'mwm_gavin_get_subaffiliates');
 add_action('wp_ajax_nopriv_get_subaffiliates', 'mwm_gavin_get_subaffiliates');
 
 function mwm_gavin_get_subaffiliates() {
-    // Verificar nonce
-    if (!wp_verify_nonce($_POST['nonce'], 'mwm_gavin_nonce')) {
-        wp_die('Security check failed');
-    }
-    
-    $current_user_id = get_current_user_id();
-    if (!$current_user_id) {
-        wp_send_json_error('Usuario no autenticado');
-        return;
-    }
-    
-    // Obtener el ID de afiliado del usuario actual
-    $affiliate_id = mwm_gavin_get_affiliate_id($current_user_id);
-    if (!$affiliate_id) {
-        wp_send_json_error('Usuario no es afiliado');
-        return;
-    }
-    
-    // Obtener subafiliados usando filtros de YITH
-    $subaffiliates = mwm_gavin_get_subaffiliates_data($affiliate_id);
-    
-    wp_send_json_success($subaffiliates);
+    wp_send_json_success([
+        ['name' => 'Prueba', 'token' => '1234']
+    ]);
 }
 
 // Función para obtener el ID de afiliado del usuario
@@ -79,31 +60,44 @@ function mwm_gavin_get_affiliate_id($user_id) {
 // Función para obtener datos de subafiliados
 function mwm_gavin_get_subaffiliates_data($affiliate_id) {
     global $wpdb;
-    
-    // Tabla de afiliados
     $affiliates_table = $wpdb->prefix . 'yith_wcaf_affiliates';
-    
-    // Buscar subafiliados (usuarios que tienen este afiliado como referente)
-    $subaffiliates = $wpdb->get_results($wpdb->prepare(
-        "SELECT a.id as affiliate_id, a.user_id, u.display_name, u.first_name, u.last_name
-         FROM $affiliates_table a
-         JOIN {$wpdb->users} u ON a.user_id = u.ID
-         WHERE a.referrer_id = %d
-         ORDER BY u.display_name ASC",
-        $affiliate_id
-    ));
-    
-    $result = array();
-    foreach ($subaffiliates as $subaffiliate) {
-        $result[] = array(
-            'affiliate_id' => $subaffiliate->affiliate_id,
-            'user_id' => $subaffiliate->user_id,
-            'name' => trim($subaffiliate->first_name . ' ' . $subaffiliate->last_name),
-            'display_name' => $subaffiliate->display_name
-        );
+    $affiliate = $wpdb->get_row($wpdb->prepare("SELECT * FROM $affiliates_table WHERE id = %d", $affiliate_id));
+    if ($affiliate) {
+        $user = get_userdata($affiliate->user_id);
+        if (!$user) {
+            error_log('MWM-GAVIN: No se encontró el usuario con user_id: ' . $affiliate->user_id);
+            return array();
+        }
+        $nombre = trim($user->first_name . ' ' . $user->last_name);
+        if (!$nombre) $nombre = $user->display_name;
+        error_log('MWM-GAVIN: Entrando en la función mwm_gavin_get_subaffiliates_data con affiliate_id: ' . $affiliate_id);
+        return array(array(
+            'name' => $nombre,
+            'token' => $affiliate->token
+        ));
+    } else {
+        error_log('MWM-GAVIN: No se encontró el afiliado con id: ' . $affiliate_id);
     }
-    
-    return $result;
+    return array();
 }
 
-
+add_shortcode('mwm_gavin_affiliate_token', function() {
+    if (!is_user_logged_in()) {
+        return '<div style="color:#a00;font-weight:bold;">Debes iniciar sesión para ver tu información de afiliado.</div>';
+    }
+    global $wpdb;
+    $user_id = get_current_user_id();
+    $table = $wpdb->prefix . 'yith_wcaf_affiliates';
+    $affiliate = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE user_id = %d", $user_id));
+    if ($affiliate) {
+        $user = get_userdata($user_id);
+        $nombre = trim($user->first_name . ' ' . $user->last_name);
+        if (!$nombre) $nombre = $user->display_name;
+        return '<div style="color:#222;font-weight:bold;">
+            Token (ID de afiliado): <b>' . esc_html($affiliate->token) . '</b><br>
+            Nombre: <b>' . esc_html($nombre) . '</b>
+        </div>';
+    } else {
+        return '<div style="color:#a00;font-weight:bold;">No se detectó afiliado para este usuario.</div>';
+    }
+});
