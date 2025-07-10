@@ -41,29 +41,34 @@ function mwm_gavin_get_subaffiliates() {
 
 // Función para obtener el ID de afiliado del usuario
 function mwm_gavin_get_affiliate_id($user_id) {
-    // Usar filtros para obtener el ID de afiliado
-    if (function_exists('YITH_WCAF_Affiliate')) {
-        $affiliate = YITH_WCAF_Affiliate()->get_affiliate_by_user_id($user_id);
-        return $affiliate ? $affiliate->get_id() : false;
-    }
-    
-    // Fallback: buscar en la base de datos
+    // Solo consulta la base de datos directamente
     global $wpdb;
     $table_name = $wpdb->prefix . 'yith_wcaf_affiliates';
     $affiliate_id = $wpdb->get_var($wpdb->prepare(
         "SELECT id FROM $table_name WHERE user_id = %d",
         $user_id
     ));
-    
     return $affiliate_id;
 }
 
 function mwm_gavin_get_current_affiliate() {
     $current_user = wp_get_current_user();
     if ( ! $current_user || 0 == $current_user->ID ) {
-        wp_send_json_success('NO USER');
+        wp_send_json_success([]);
     }
     $affiliate_id = mwm_gavin_get_affiliate_id($current_user->ID);
-    wp_send_json_success('AFFILIATE ID: ' . $affiliate_id);
+    if ( ! $affiliate_id ) {
+        wp_send_json_success([]);
+    }
+    $nombre = trim($current_user->first_name . ' ' . $current_user->last_name);
+    if (!$nombre) $nombre = $current_user->display_name;
+    wp_send_json_success(array(
+        array(
+            'name'  => $nombre,
+            'token' => $affiliate_id,
+        )
+    ));
 }
+
+
 
