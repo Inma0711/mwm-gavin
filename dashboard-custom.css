@@ -7,6 +7,7 @@
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
 }
 
 /* Título de la tabla */
@@ -60,4 +61,10 @@
 /* Ocultar elementos del dashboard */
 .hidden {
     display: none !important;
+} 
+
+#mwm-gavin-affiliates-table th,
+#mwm-gavin-affiliates-table td {
+    text-align: center;
+    vertical-align: middle;
 } 

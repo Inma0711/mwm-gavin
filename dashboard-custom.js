@@ -55,6 +55,19 @@ function cambiarTextos() {
         }
     });
 
+    // Número de IVA → Número GST
+    document.querySelectorAll('label').forEach(function(label) {
+        for (var i = 0; i < label.childNodes.length; i++) {
+            var node = label.childNodes[i];
+            if (node.nodeType === Node.TEXT_NODE) {
+                var txt = node.textContent.trim();
+                if (txt === 'Número de IVA *' || txt === 'VAT Number *') {
+                    node.textContent = getLang().startsWith('es') ? 'Número GST (si procede)' : 'GST Number (if applicable)';
+                }
+            }
+        }
+    });
+
     // Título generador de enlaces
     var dashboardTitle = document.querySelector('.yith-wcaf-link-generator .dashboard-title h3');
     if (dashboardTitle) {
@@ -119,18 +132,24 @@ document.addEventListener('DOMContentLoaded', function() {
         var old = document.getElementById('mwm-gavin-affiliates-table');
         if (old) old.remove();
 
+        // Detecta idioma
+        var lang = getLang();
+        var titleText = lang.startsWith('es') ? 'Todos los afiliados' : 'All affiliates';
+        var nameHeader = lang.startsWith('es') ? 'NOMBRE' : 'NAME';
+        var idHeader = lang.startsWith('es') ? 'ID DE AFILIADO' : 'AFFILIATE ID';
+
         // Crea el contenedor y la tabla
         var tableContainer = document.createElement('div');
         tableContainer.id = 'mwm-gavin-affiliates-table';
 
         var title = document.createElement('h3');
-        title.textContent = 'Todos los afiliados';
+        title.textContent = titleText;
         tableContainer.appendChild(title);
 
         var table = document.createElement('table');
         var thead = document.createElement('thead');
         var headerRow = document.createElement('tr');
-        ['Nombre', 'ID de afiliado'].forEach(function(headerText) {
+        [nameHeader, idHeader].forEach(function(headerText) {
             var th = document.createElement('th');
             th.textContent = headerText;
             headerRow.appendChild(th);
@@ -143,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var noDataRow = document.createElement('tr');
             var noDataCell = document.createElement('td');
             noDataCell.colSpan = 2;
-            noDataCell.textContent = 'No hay afiliados.';
+            noDataCell.textContent = lang.startsWith('es') ? 'No hay afiliados.' : 'No affiliates.';
             noDataCell.className = 'no-data';
             noDataRow.appendChild(noDataCell);
             tbody.appendChild(noDataRow);
