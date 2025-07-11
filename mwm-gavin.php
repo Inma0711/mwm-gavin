@@ -11,13 +11,22 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Enqueue scripts
+// Enqueue scripts and styles
 add_action('wp_enqueue_scripts', function() {
+    // Enqueue CSS
+    wp_enqueue_style(
+        'mwm-gavin-dashboard-custom',
+        plugin_dir_url(__FILE__) . 'dashboard-custom.css',
+        array(),
+        '1.0.0'
+    );
+    
+    // Enqueue JavaScript
     wp_enqueue_script(
         'mwm-gavin-dashboard-custom',
         plugin_dir_url(__FILE__) . 'dashboard-custom.js',
         array('jquery'),
-        '1.0',
+        '1.0.0',
         true
     );
     
@@ -31,13 +40,7 @@ add_action('wp_enqueue_scripts', function() {
 add_action('wp_ajax_get_subaffiliates', 'mwm_gavin_get_current_affiliate');
 add_action('wp_ajax_nopriv_get_subaffiliates', 'mwm_gavin_get_current_affiliate');
 
-/*
-function mwm_gavin_get_subaffiliates() {
-    wp_send_json_success([
-        ['name' => 'Prueba', 'token' => '1234']
-    ]);
-}
-*/
+
 
 // Función para obtener el ID de afiliado del usuario
 function mwm_gavin_get_affiliate_id($user_id) {

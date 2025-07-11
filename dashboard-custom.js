@@ -1,5 +1,4 @@
 // Ocultar pestañas "Commissions" y "Visits" en el panel de afiliados (solo frontend)
-// Funciones utilitarias que puedes seguir usando
 function getLang() {
     return (document.documentElement.lang || 'en').toLowerCase();
 }
@@ -7,9 +6,9 @@ function getLang() {
 // Ocultar pestañas "Commissions" y "Visits" en el panel de afiliados (solo frontend)
 function ocultarPestanas() {
     var commissionsTab = document.querySelector('.yith-wcaf-dashboard-navigation-item.commissions');
-    if (commissionsTab) commissionsTab.style.display = 'none';
+    if (commissionsTab) commissionsTab.classList.add('hidden');
     var visitsTab = document.querySelector('.yith-wcaf-dashboard-navigation-item.clicks');
-    if (visitsTab) visitsTab.style.display = 'none';
+    if (visitsTab) visitsTab.classList.add('hidden');
 }
 
 // Cambiar títulos y labels
@@ -123,22 +122,17 @@ document.addEventListener('DOMContentLoaded', function() {
         // Crea el contenedor y la tabla
         var tableContainer = document.createElement('div');
         tableContainer.id = 'mwm-gavin-affiliates-table';
-        tableContainer.style.cssText = 'margin-top: 30px; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);';
 
         var title = document.createElement('h3');
         title.textContent = 'Todos los afiliados';
-        title.style.cssText = 'margin-bottom: 20px; color: #333; font-size: 18px; font-weight: 600;';
         tableContainer.appendChild(title);
 
         var table = document.createElement('table');
-        table.style.cssText = 'width: 100%; border-collapse: collapse; margin-top: 10px;';
         var thead = document.createElement('thead');
         var headerRow = document.createElement('tr');
-        headerRow.style.cssText = 'background-color: #f8f9fa; border-bottom: 2px solid #dee2e6;';
         ['Nombre', 'ID de afiliado'].forEach(function(headerText) {
             var th = document.createElement('th');
             th.textContent = headerText;
-            th.style.cssText = 'padding: 12px; text-align: left; font-weight: 600; color: #495057; border-bottom: 2px solid #dee2e6;';
             headerRow.appendChild(th);
         });
         thead.appendChild(headerRow);
@@ -150,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var noDataCell = document.createElement('td');
             noDataCell.colSpan = 2;
             noDataCell.textContent = 'No hay afiliados.';
-            noDataCell.style.cssText = 'padding: 20px; text-align: center; color: #6c757d; font-style: italic;';
+            noDataCell.className = 'no-data';
             noDataRow.appendChild(noDataCell);
             tbody.appendChild(noDataRow);
         } else {
@@ -158,11 +152,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 var row = document.createElement('tr');
                 var nameCell = document.createElement('td');
                 nameCell.textContent = af.name || 'N/A';
-                nameCell.style.cssText = 'padding: 12px; color: #333;';
                 row.appendChild(nameCell);
                 var idCell = document.createElement('td');
                 idCell.textContent = af.token || 'N/A';
-                idCell.style.cssText = 'padding: 12px; color: #333; font-weight: 500;';
                 row.appendChild(idCell);
                 tbody.appendChild(row);
             });

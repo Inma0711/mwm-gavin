@@ -1,0 +1,63 @@
+/* Estilos para el plugin MWM Gavin - Dashboard de Afiliados */
+
+/* Contenedor principal de la tabla de afiliados */
+#mwm-gavin-affiliates-table {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Título de la tabla */
+#mwm-gavin-affiliates-table h3 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Tabla de afiliados */
+#mwm-gavin-affiliates-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* Encabezados de la tabla */
+#mwm-gavin-affiliates-table thead tr {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+#mwm-gavin-affiliates-table th {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Celdas de datos */
+#mwm-gavin-affiliates-table td {
+    padding: 12px;
+    color: #333;
+}
+
+/* Celda del ID de afiliado */
+#mwm-gavin-affiliates-table td:last-child {
+    font-weight: 500;
+}
+
+/* Mensaje cuando no hay datos */
+#mwm-gavin-affiliates-table .no-data {
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Ocultar elementos del dashboard */
+.hidden {
+    display: none !important;
+} 
